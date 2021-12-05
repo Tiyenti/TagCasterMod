@@ -16,6 +16,7 @@ namespace TagCasterMod
         UILabel watermark = null;
 
         bool showDataInWatermark = true;
+        bool showTimeToWin = true;
 
         public void Initialize(IManager manager)
         {
@@ -68,7 +69,12 @@ namespace TagCasterMod
 
                     var watermarkTextToSetTo = "[c][ffffff]";
 
-                    var list = new List<ModePlayerInfoBase>();
+                    if (G.Sys.GameManager_.ModeID_ == GameModeID.ReverseTag && showTimeToWin)
+                    {
+                        watermarkTextToSetTo += GUtils.GetFormattedTime(((ReverseTagMode)G.Sys.GameManager_.Mode_).TimeLimit_, true) + " to win\n";
+                    }
+
+                        var list = new List<ModePlayerInfoBase>();
                     G.Sys.GameManager_.Mode_.GetSortedListOfModeInfosNotFinished(list);
                     var index = 0;
                     foreach (var a in list)
