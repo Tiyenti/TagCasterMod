@@ -37,6 +37,7 @@ namespace TagCasterMod
             pdf.carCamera_.camera_.cullingMask |= 1 << 1;
             pdf.carCamera_.carStats_ = initialCarCam.carStats_;
             pdf.carCamera_.activeCameraMode_ = initialCarCam.activeCameraMode_;
+            pdf.carCamera_.profile_ = G.Sys.ProfileManager_.CurrentProfile_;
 
             var specLogicHack = pdf.carCamera_.GetOrAddComponent<SpectatorLogicHack>();
             specLogicHack.carCamera_ = pdf.carCamera_;
@@ -77,8 +78,6 @@ namespace TagCasterMod
                 
 
                 secondCam.transform.position = a[0].transform.position;*/
-
-                storedSpectatorCam.ManualUpdate();
                 
             }
         }
@@ -100,12 +99,6 @@ namespace TagCasterMod
         void InitHackStuff()
         {
             this.carCamera_.SwitchedTarget_.Broadcast(new SwitchedTarget.Data(this.carCamera_));
-        }
-
-        internal void ManualUpdate()
-        {
-
-            this.carCamera_.carStats_ = this.carCamera_.target_.GetComponent<CarStats>();
         }
     }
 }
