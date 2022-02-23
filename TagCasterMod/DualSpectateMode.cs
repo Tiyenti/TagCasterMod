@@ -24,7 +24,7 @@ namespace TagCasterMod
             var secondCamB = new GameObject();
             var secondCam = secondCamB.AddComponent<Camera>();
             var secondCarCam = secondCamB.AddComponent<CarCamera>();
-            secondCarCam.playerDataOwner_ = new PlayerDataLocal();
+            secondCarCam.playerDataOwner_ = initialCarCam.playerDataOwner_;
             
             var secondCamLogic = secondCamB.AddComponent<SpectatorCameraLogic>();
             
