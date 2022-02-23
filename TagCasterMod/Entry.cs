@@ -58,7 +58,7 @@ namespace TagCasterMod
                 if (G.Sys.PlayerManager_?.Current_?.playerData_?.CarCamera_?.HasComponent<SpectatorCameraLogic>() == true)
                 {
                     var cam = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_;
-                    DualSpectateMode.ActivateDualSpectate(cam, G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.GetComponent<SpectatorCameraLogic>());
+                    DualSpectateMode.ActivateDualSpectate(this, cam, G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.GetComponent<SpectatorCameraLogic>());
                 }
             });
         }

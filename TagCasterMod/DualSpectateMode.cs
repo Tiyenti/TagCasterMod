@@ -11,7 +11,7 @@ namespace TagCasterMod
     {
         static bool dualSpectateActive = false;
 
-        public static void ActivateDualSpectate(CarCamera initialCarCam, SpectatorCameraLogic spc)
+        public static void ActivateDualSpectate(Entry e, CarCamera initialCarCam, SpectatorCameraLogic spc)
         {
             if (dualSpectateActive)
             {
@@ -21,28 +21,17 @@ namespace TagCasterMod
 
 
             Console.WriteLine("Dual spectate mode is being activated");
+            dualSpectateActive = true;
 
-            var secondCamB = new GameObject();
-            var secondCam = secondCamB.AddComponent<Camera>();
-            var secondCarCam = secondCamB.AddComponent<CarCamera>();
-            secondCarCam.cameraModes_ = initialCarCam.cameraModes_;
-            secondCarCam.activeCameraMode_ = initialCarCam.activeCameraMode_;
-            secondCarCam.playerDataOwner_ = initialCarCam.playerDataOwner_;
-            
-            var secondCamLogic = secondCamB.AddComponent<SpectatorCameraLogic>();
-            secondCamLogic.target_ = spc.target_;
-            
-            secondCamB.AddComponent<VREffectController>();
-            var lod = secondCamB.AddComponent<CarLevelOfDetail>();
-            lod.AddWatcher(secondCarCam);
-            secondCamB.AddComponent<PointOfInterestCamera>();
-            secondCamB.AddComponent<CameraShake>();
-            secondCamB.AddComponent<DepthOfField>();
+            var secondCamObj = UnityEngine.Object.Instantiate(initialCarCam.cameraObj_);
+            var secondCam = secondCamObj.GetComponent<Camera>();
+            var secondCarCam = secondCamObj.GetComponent<CarCamera>();
+            secondCamObj.RemoveComponent<AdjustRadialBlur>();
+            secondCamObj.RemoveComponent<PlayerSpecificRenderingCamera>();
+
 
             initialCarCam.camera_.rect = new Rect(0, 0, 0.5f, 1);
-            secondCam.rect = new Rect(0.5f, 0, 0.5f, 1);
-
-            dualSpectateActive = true;
+            secondCam.rect = new Rect(1f, 0, 0.5f, 1);
 
         }
     }
