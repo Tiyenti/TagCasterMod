@@ -65,6 +65,8 @@ namespace TagCasterMod
 
         void Update()
         {
+            DualSpectateMode.UpdateDualSpectate();
+
             if (G.Sys.PlayerManager_?.Current_?.playerData_?.Finished_ == true &&
                 G.Sys.GameManager_?.Mode_?.IsStarted_ == true &&
                 G.Sys.NetworkingManager_.IsOnline_)

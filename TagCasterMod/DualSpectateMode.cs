@@ -11,6 +11,8 @@ namespace TagCasterMod
     {
         static bool dualSpectateActive = false;
 
+        static Camera secondCam;
+
         public static void ActivateDualSpectate(Entry e, CarCamera initialCarCam, SpectatorCameraLogic spc)
         {
             if (dualSpectateActive)
@@ -23,16 +25,23 @@ namespace TagCasterMod
             Console.WriteLine("Dual spectate mode is being activated");
             dualSpectateActive = true;
 
-            var secondCamObj = UnityEngine.Object.Instantiate(initialCarCam.cameraObj_);
-            var secondCam = secondCamObj.GetComponent<Camera>();
-            var secondCarCam = secondCamObj.GetComponent<CarCamera>();
-            secondCamObj.RemoveComponent<AdjustRadialBlur>();
-            secondCamObj.RemoveComponent<PlayerSpecificRenderingCamera>();
-
+            var secondCamObj = UnityEngine.Object.Instantiate(initialCarCam.gameObject);
+            secondCam = secondCamObj.GetComponent<Camera>();
 
             initialCarCam.camera_.rect = new Rect(0, 0, 0.5f, 1);
             secondCam.rect = new Rect(1f, 0, 0.5f, 1);
 
+            secondCamObj.RemoveComponent<AdjustRadialBlur>();
+            secondCamObj.RemoveComponent<PlayerSpecificRenderingCamera>();
+
+        }
+
+        public static void UpdateDualSpectate()
+        {
+            if (secondCam && dualSpectateActive)
+            {
+                secondCam.Render();
+            }
         }
     }
 }
