@@ -51,11 +51,11 @@ namespace TagCasterMod
                 if (watermark != null)
                 {
                     watermark.text = "";
-                    DualSpectateMode.Reset();
                 }
+                DualSpectateMode.Reset();
             });
 
-            manager.Hotkeys.BindHotkey("M", () => {
+            manager.Hotkeys.BindHotkey("RightControl+M", () => {
                 if (G.Sys.PlayerManager_?.Current_?.playerData_?.CarCamera_?.HasComponent<SpectatorCameraLogic>() == true)
                 {
                     var cam = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_;
