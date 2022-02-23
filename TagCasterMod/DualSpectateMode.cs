@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Events.CarCamera;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace TagCasterMod
         static bool dualSpectateActive = false;
 
         static Camera secondCam;
+
+        static SpectatorLogicHack storedSpectatorCam;
 
         public static void ActivateDualSpectate(Entry e, CarCamera initialCarCam, SpectatorCameraLogic spc)
         {
@@ -32,8 +35,13 @@ namespace TagCasterMod
             var pdf = PlayerDataFake.InitializeFakePlayerData(G.Sys.ProfileManager_.CurrentProfile_, false);
             pdf.carCamera_.isSpectating_ = true;
             pdf.carCamera_.camera_.cullingMask |= 1 << 1;
+            pdf.carCamera_.carStats_ = initialCarCam.carStats_;
+            pdf.carCamera_.activeCameraMode_ = initialCarCam.activeCameraMode_;
 
-            pdf.carCamera_.GetOrAddComponent<SpectatorCameraLogic>();
+            var specLogicHack = pdf.carCamera_.GetOrAddComponent<SpectatorLogicHack>();
+            specLogicHack.carCamera_ = pdf.carCamera_;
+
+            storedSpectatorCam = specLogicHack;
 
 
             initialCarCam.camera_.rect = new Rect(0, 0, 0.5f, 1);
@@ -66,9 +74,38 @@ namespace TagCasterMod
                     }
                 }
 
+                
+
                 secondCam.transform.position = a[0].transform.position;*/
+
+                storedSpectatorCam.ManualUpdate();
                 
             }
+        }
+    }
+
+    class SpectatorLogicHack : SpectatorCameraLogic
+    {
+        new void Awake()
+        {
+            this.myInput_ = new InputStates();
+        }
+
+        new void Start()
+        {
+            this.currentMode_ = G.Sys.GameManager_.Mode_;
+            this.carCamera_.StartSpectating();
+        }
+
+        void InitHackStuff()
+        {
+            this.carCamera_.SwitchedTarget_.Broadcast(new SwitchedTarget.Data(this.carCamera_));
+        }
+
+        internal void ManualUpdate()
+        {
+
+            this.carCamera_.carStats_ = this.carCamera_.target_.GetComponent<CarStats>();
         }
     }
 }
