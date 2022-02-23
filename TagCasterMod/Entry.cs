@@ -51,6 +51,7 @@ namespace TagCasterMod
                 if (watermark != null)
                 {
                     watermark.text = "";
+                    DualSpectateMode.Reset();
                 }
             });
 

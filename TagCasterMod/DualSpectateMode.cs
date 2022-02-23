@@ -55,6 +55,11 @@ namespace TagCasterMod
 
         }
 
+        public static void Reset()
+        {
+            storedSpectatorCam = null;
+            dualSpectateActive = false;
+        }
         public static void UpdateDualSpectate()
         {
             if (secondCam && dualSpectateActive)
