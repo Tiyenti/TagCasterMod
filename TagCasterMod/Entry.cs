@@ -54,10 +54,10 @@ namespace TagCasterMod
                 }
             });
 
-            manager.Hotkeys.BindHotkey("Control+M", () => {
+            manager.Hotkeys.BindHotkey("M", () => {
                 if (G.Sys.PlayerManager_?.Current_?.playerData_?.CarCamera_?.HasComponent<SpectatorCameraLogic>() == true)
                 {
-                    var cam = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.camera_;
+                    var cam = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_;
                     DualSpectateMode.ActivateDualSpectate(cam);
                 }
             });

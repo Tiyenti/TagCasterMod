@@ -8,18 +8,29 @@ namespace TagCasterMod
 {
     class DualSpectateMode
     {
+        static bool dualSpectateActive = false;
 
-
-        public static void ActivateDualSpectate(Camera initialCarCam)
+        public static void ActivateDualSpectate(CarCamera initialCarCam)
         {
+            if (dualSpectateActive)
+            {
+                Console.WriteLine("Dual spectate already active!");
+                return;
+            }
+
+
+            Console.WriteLine("Dual spectate mode is being activated");
+
             var secondCamB = new GameObject();
             var secondCam = secondCamB.AddComponent<Camera>();
             var secondCarCam = secondCamB.AddComponent<CarCamera>();
+            secondCarCam.playerDataOwner_ = new PlayerDataLocal();
+            
             var secondCamLogic = secondCamB.AddComponent<SpectatorCameraLogic>();
             
             secondCamB.AddComponent<VREffectController>();
 
-            initialCarCam.rect = new Rect(0, 0, 0.5f, 1);
+            initialCarCam.camera_.rect = new Rect(0, 0, 0.5f, 1);
             secondCam.rect = new Rect(0.5f, 0, 0.5f, 1);
 
         }
