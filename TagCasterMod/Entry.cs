@@ -73,12 +73,14 @@ namespace TagCasterMod
                 G.Sys.NetworkingManager_.IsOnline_)
             //if (G.Sys.GameManager_?.Mode_?.IsStarted_ == true && G.Sys.NetworkingManager_.IsOnline_)
             {
-                if (G.Sys.PlayerManager_?.Current_?.playerData_?.CarCamera_?.HasComponent<SpectatorCameraLogic>() == true && showDataInWatermark)
+                if (G.Sys.PlayerManager_?.Current_?.playerData_?.CarCamera_?.HasComponent<SpectatorCameraLogic>() == true && showDataInWatermark
+                    && G.Sys.GameManager_.ModeID_ != GameModeID.ReverseTag)
                 //if (showDataInWatermark)
                 {
+
                     watermark.enabled = true;
 
-                    var watermarkTextToSetTo = "[c][ffffff]";
+                    var watermarkTextToSetTo = "[c][ffffff]";)
 
                     if (G.Sys.GameManager_.ModeID_ == GameModeID.ReverseTag && showTimeToWin)
                     {
