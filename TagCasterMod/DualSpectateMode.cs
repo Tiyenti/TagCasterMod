@@ -53,7 +53,10 @@ namespace TagCasterMod
         {
             if (storedSpectatorCam && dualSpectateActive)
             {
-                // will be used in the future probably not but right now
+                if (Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Period))
+                {
+                    storedSpectatorCam.FindNextTarget();
+                }
             }
         }
     }
