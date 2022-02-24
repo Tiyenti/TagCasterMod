@@ -80,7 +80,7 @@ namespace TagCasterMod
 
                     watermark.enabled = true;
 
-                    var watermarkTextToSetTo = "[c][ffffff]";)
+                    var watermarkTextToSetTo = "[c][ffffff]";
 
                     if (G.Sys.GameManager_.ModeID_ == GameModeID.ReverseTag && showTimeToWin)
                     {
