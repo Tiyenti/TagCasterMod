@@ -12,8 +12,6 @@ namespace TagCasterMod
     {
         static bool dualSpectateActive = false;
 
-        static Camera secondCam;
-
         static SpectatorLogicHack storedSpectatorCam;
 
         public static void ActivateDualSpectate(Entry e, CarCamera initialCarCam, SpectatorCameraLogic spc)
@@ -27,10 +25,6 @@ namespace TagCasterMod
 
             Console.WriteLine("Dual spectate mode is being activated");
             dualSpectateActive = true;
-
-            //var secondCamObj = UnityEngine.Object.Instantiate(initialCarCam.gameObject);
-            //var secondCamObj = new GameObject();
-            //var secondCam = secondCamObj.AddComponent<Camera>();
 
             var pdf = PlayerDataFake.InitializeFakePlayerData(G.Sys.ProfileManager_.CurrentProfile_, false);
             pdf.carCamera_.isSpectating_ = true;
@@ -48,11 +42,6 @@ namespace TagCasterMod
             initialCarCam.camera_.rect = new Rect(0, 0, 0.5f, 1);
             pdf.CarCamera_.camera_.rect = new Rect(0.5f, 0, 0.5f, 1);
 
-            
-
-            //secondCamObj.RemoveComponent<AdjustRadialBlur>();
-            //secondCamObj.RemoveComponent<PlayerSpecificRenderingCamera>();
-
         }
 
         public static void Reset()
@@ -62,28 +51,9 @@ namespace TagCasterMod
         }
         public static void UpdateDualSpectate()
         {
-            if (secondCam && dualSpectateActive)
+            if (storedSpectatorCam && dualSpectateActive)
             {
-                /*List<PlayerDataBase> a = new List<PlayerDataBase>();
-                if (G.Sys.NetworkingManager_.IsOnline_)
-                {
-                    G.Sys.GameManager_.Mode_.GetSortedListOfUnfinishedPlayers(a);
-                }
-                else
-                {
-                    foreach (var b in PlayerDataReplay.ReplayPlayers_)
-                    {
-                        if (b != null && !b.Finished_)
-                        {
-                            a.Add(b);
-                        }
-                    }
-                }
-
-                
-
-                secondCam.transform.position = a[0].transform.position;*/
-                
+                // will be used in the future probably not but right now
             }
         }
     }
@@ -99,11 +69,6 @@ namespace TagCasterMod
         {
             this.currentMode_ = G.Sys.GameManager_.Mode_;
             this.carCamera_.StartSpectating();
-        }
-
-        void InitHackStuff()
-        {
-            this.carCamera_.SwitchedTarget_.Broadcast(new SwitchedTarget.Data(this.carCamera_));
         }
     }
 }
