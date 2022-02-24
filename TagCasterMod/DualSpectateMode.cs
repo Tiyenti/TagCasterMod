@@ -49,14 +49,12 @@ namespace TagCasterMod
             storedSpectatorCam = null;
             dualSpectateActive = false;
         }
+       
         public static void UpdateDualSpectate()
         {
             if (storedSpectatorCam && dualSpectateActive)
             {
-                if (Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Period))
-                {
-                    storedSpectatorCam.FindNextTarget();
-                }
+                // not used atm but maybe will be later
             }
         }
     }
@@ -72,6 +70,13 @@ namespace TagCasterMod
         {
             this.currentMode_ = G.Sys.GameManager_.Mode_;
             this.carCamera_.StartSpectating();
+        }
+
+        new void Update()
+        {
+            if (!this.carCamera_.IsSpectating_) return;
+
+            if ((Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Period)) || this.target_ == null || this.carCamera_.Target_ == null) FindNextTarget();
         }
     }
 }
