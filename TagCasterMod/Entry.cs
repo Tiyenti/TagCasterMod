@@ -74,7 +74,7 @@ namespace TagCasterMod
             //if (G.Sys.GameManager_?.Mode_?.IsStarted_ == true && G.Sys.NetworkingManager_.IsOnline_)
             {
                 if (G.Sys.PlayerManager_?.Current_?.playerData_?.CarCamera_?.HasComponent<SpectatorCameraLogic>() == true && showDataInWatermark
-                    && G.Sys.GameManager_.ModeID_ != GameModeID.ReverseTag)
+                    && G.Sys.GameManager_.ModeID_ == GameModeID.ReverseTag)
                 //if (showDataInWatermark)
                 {
 
