@@ -19,6 +19,7 @@ namespace TagCasterMod
         bool showTimeToWin = true;
 
         bool autoEnterSpectate = true;
+        bool autoEnterSpectateHideMenu = true;
 
         public void Initialize(IManager manager)
         {
@@ -48,8 +49,9 @@ namespace TagCasterMod
                 watermark.text = "[c][00FF8C]TAG CASTER MOD ENABLED[-][/c]";
 
                 if (showDataInWatermark) watermark.text += "\nShow Tag Scoreboard |";
-                if (showDataInWatermark) watermark.text += "\nShow Time To Win on Tag Scoreboard --|";
-                if (autoEnterSpectate) watermark.text += "\nAuto Enter Spectate |";
+                if (showDataInWatermark) watermark.text += "\nShow Time To Win --|";
+                if (autoEnterSpectate) watermark.text += "\n\nAuto Enter Spectate |";
+                if (autoEnterSpectateHideMenu) watermark.text += "\nHide Finish Menu Automatically --|";
             });
 
             Events.Scene.BeginSceneSwitchFadeOut.Subscribe((data) =>
@@ -67,8 +69,11 @@ namespace TagCasterMod
                 {
                     Console.WriteLine("Auto-enter spectate activated");
                     G.Sys.PlayerManager_.Current_.playerData_.Spectate();
-                    //var menu = FindObjectOfType<FinishMenuLogic>();
-                    //if (menu != null) menu.SetState(MenuWithToggleVisibility.VisibleState.HiddenAndNamesHidden);
+                    if (autoEnterSpectateHideMenu)
+                    {
+                        var menu = FindObjectOfType<FinishMenuLogic>();
+                        if (menu != null) menu.SetState(MenuWithToggleVisibility.VisibleState.HiddenAndNamesHidden);
+                    }
                 }
             });
 
