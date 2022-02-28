@@ -36,7 +36,15 @@ namespace TagCasterMod
             var specLogicHack = pdf.carCamera_.GetOrAddComponent<SpectatorLogicHack>();
             specLogicHack.carCamera_ = pdf.carCamera_;
 
-            storedSpectatorCam = specLogicHack;
+            // replace the original spectator logic with our own version
+            var p1spcstuff = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.GetOrAddComponent<SpectatorLogicHack>();
+            p1spcstuff.carCamera_ = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_;
+            p1spcstuff.myInput_ = spc.myInput_;
+            p1spcstuff.player = 1;
+            G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.gameObject.RemoveComponent<SpectatorCameraLogic>();
+
+
+           storedSpectatorCam = specLogicHack;
 
 
             initialCarCam.camera_.rect = new Rect(0, 0, 0.5f, 1);
@@ -51,9 +59,9 @@ namespace TagCasterMod
         }
 
         static float showNameFor = 0.0f;
-        internal static void ShowPlayerNamesTemporarily(string to)
+        internal static void ShowPlayerNamesTemporarily(int player, string to)
         {
-            Entry.watermark.text = $"p2 view set to: {to}";
+            Entry.watermark.text = $"p{player} view set to: {to}";
             showNameFor = 2.0f;
         }
        
@@ -76,9 +84,12 @@ namespace TagCasterMod
 
     class SpectatorLogicHack : SpectatorCameraLogic
     {
+        internal int player = 2;
+
         new void Awake()
         {
-            this.myInput_ = new InputStates();
+            if (player == 2) this.myInput_ = new InputStates();
+            // if player == 1, this is set in DualSpectateMode.ActivateDualSpectate()
         }
 
         new void Start()
@@ -91,21 +102,31 @@ namespace TagCasterMod
         {
             if (!this.carCamera_.IsSpectating_) return;
 
-            if ((Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Period)) || this.target_ == null || this.carCamera_.Target_ == null)
+            bool inputFlag;
+            if (player > 1)
+            {
+                inputFlag = Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Period);
+            }
+            else
+            {
+                inputFlag = this.myInput_.GetTriggered(InputAction.SpectateNextPlayer);
+            }
+
+            if (inputFlag || this.target_ == null || this.carCamera_.Target_ == null)
             {
                 try
                 {
                     FindNextTarget();
                 }
-                catch (ArgumentException e)
+                /*catch (ArgumentException e)
                 {
                     // nothing, just want to handle the error
                     // since tbh it doesn't look like anything breaks
-                }
+                }*/
                 finally
                 {
-                    Console.WriteLine($"[Dual Spectate] Set p2 view to {this.target_.carLogic_.playerData_.name_}");
-                    DualSpectateMode.ShowPlayerNamesTemporarily(this.target_.carLogic_.playerData_.name_);
+                    Console.WriteLine($"[Dual Spectate] Set p{player} view to {this.target_.carLogic_.playerData_.name_}");
+                    DualSpectateMode.ShowPlayerNamesTemporarily(player, this.target_.carLogic_.playerData_.name_);
                 }
 
             }
