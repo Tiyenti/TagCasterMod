@@ -19,7 +19,7 @@ namespace TagCasterMod
         bool showTimeToWin = true;
 
         bool autoEnterSpectate = true;
-        bool autoEnterSpectateHideMenu = true;
+        bool autoEnterSpectateHideMenu = false;
 
         public void Initialize(IManager manager)
         {
