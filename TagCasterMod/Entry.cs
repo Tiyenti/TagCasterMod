@@ -46,6 +46,10 @@ namespace TagCasterMod
                 }
 
                 watermark.text = "[c][00FF8C]TAG CASTER MOD ENABLED[-][/c]";
+
+                if (showDataInWatermark) watermark.text += "\nShow Tag Scoreboard |";
+                if (showDataInWatermark) watermark.text += "\nShow Time To Win on Tag Scoreboard --|";
+                if (autoEnterSpectate) watermark.text += "\nAuto Enter Spectate |";
             });
 
             Events.Scene.BeginSceneSwitchFadeOut.Subscribe((data) =>
