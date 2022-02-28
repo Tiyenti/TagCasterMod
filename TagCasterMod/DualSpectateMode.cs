@@ -118,11 +118,11 @@ namespace TagCasterMod
                 {
                     FindNextTarget();
                 }
-                /*catch (ArgumentException e)
+                catch (ArgumentException e)
                 {
                     // nothing, just want to handle the error
                     // since tbh it doesn't look like anything breaks
-                }*/
+                }
                 finally
                 {
                     Console.WriteLine($"[Dual Spectate] Set p{player} view to {this.target_.carLogic_.playerData_.name_}");
