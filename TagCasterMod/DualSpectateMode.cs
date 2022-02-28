@@ -49,12 +49,27 @@ namespace TagCasterMod
             storedSpectatorCam = null;
             dualSpectateActive = false;
         }
+
+        static float showNameFor = 0.0f;
+        internal static void ShowPlayerNamesTemporarily(string to)
+        {
+            Entry.watermark.text = $"p2 view set to: {to}";
+            showNameFor = 2.0f;
+        }
        
         public static void UpdateDualSpectate()
         {
             if (storedSpectatorCam && dualSpectateActive)
             {
-                // not used atm but maybe will be later
+                if (showNameFor <= 0.0f)
+                {
+                    showNameFor = 0.0f;
+                    Entry.watermark.text = "";
+                }
+                else
+                {
+                    showNameFor -= Time.deltaTime;
+                }
             }
         }
     }
@@ -76,7 +91,24 @@ namespace TagCasterMod
         {
             if (!this.carCamera_.IsSpectating_) return;
 
-            if ((Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Period)) || this.target_ == null || this.carCamera_.Target_ == null) FindNextTarget();
+            if ((Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Period)) || this.target_ == null || this.carCamera_.Target_ == null)
+            {
+                try
+                {
+                    FindNextTarget();
+                }
+                catch (ArgumentException e)
+                {
+                    // nothing, just want to handle the error
+                    // since tbh it doesn't look like anything breaks
+                }
+                finally
+                {
+                    Console.WriteLine($"[Dual Spectate] Set p2 view to {this.target_.carLogic_.playerData_.name_}");
+                    DualSpectateMode.ShowPlayerNamesTemporarily(this.target_.carLogic_.playerData_.name_);
+                }
+
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TagCasterMod
     [ModEntryPoint("com.github.tiyenti/TagCasterMod")]
     public class Entry : MonoBehaviour
     {
-        UILabel watermark = null;
+        internal static UILabel watermark = null;
 
         bool showDataInWatermark = true;
         bool showTimeToWin = true;
