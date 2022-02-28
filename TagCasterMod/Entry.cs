@@ -18,6 +18,8 @@ namespace TagCasterMod
         bool showDataInWatermark = true;
         bool showTimeToWin = true;
 
+        bool autoEnterSpectate = true;
+
         public void Initialize(IManager manager)
         {
             DontDestroyOnLoad(this);
@@ -53,6 +55,17 @@ namespace TagCasterMod
                     watermark.text = "";
                 }
                 DualSpectateMode.Reset();
+            });
+
+            Events.GameMode.ModeStarted.Subscribe((data) =>
+            {
+                if (G.Sys.NetworkingManager_.IsOnline_ && autoEnterSpectate)
+                {
+                    Console.WriteLine("Auto-enter spectate activated");
+                    G.Sys.PlayerManager_.Current_.playerData_.Spectate();
+                    //var menu = FindObjectOfType<FinishMenuLogic>();
+                    //if (menu != null) menu.SetState(MenuWithToggleVisibility.VisibleState.HiddenAndNamesHidden);
+                }
             });
 
             manager.Hotkeys.BindHotkey("RightControl+M", () => {
