@@ -12,7 +12,8 @@ namespace TagCasterMod
     {
         static bool dualSpectateActive = false;
 
-        static SpectatorLogicHack storedSpectatorCam;
+        static SpectatorLogicHack p2spectatorCam;
+        static SpectatorLogicHack p1spectatorCam;
 
         public static void ActivateDualSpectate(Entry e, CarCamera initialCarCam, SpectatorCameraLogic spc)
         {
@@ -44,7 +45,8 @@ namespace TagCasterMod
             G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.gameObject.RemoveComponent<SpectatorCameraLogic>();
 
 
-           storedSpectatorCam = specLogicHack;
+            p1spectatorCam = p1spcstuff;
+            p2spectatorCam = specLogicHack;
 
 
             initialCarCam.camera_.rect = new Rect(0, 0, 0.5f, 1);
@@ -54,20 +56,21 @@ namespace TagCasterMod
 
         public static void Reset()
         {
-            storedSpectatorCam = null;
+            p2spectatorCam = null;
+            p1spectatorCam = null;
             dualSpectateActive = false;
         }
 
         static float showNameFor = 0.0f;
-        internal static void ShowPlayerNamesTemporarily(int player, string to)
+        internal static void ShowPlayerNamesTemporarily()
         {
-            Entry.watermark.text = $"p{player} view set to: {to}";
+            Entry.watermark.text = $"[p1] {p1spectatorCam.target_.carLogic_.playerData_.name_} --- {p2spectatorCam.target_.carLogic_.playerData_.name_} [p2]";
             showNameFor = 2.0f;
         }
        
         public static void UpdateDualSpectate()
         {
-            if (storedSpectatorCam && dualSpectateActive)
+            if (p2spectatorCam && dualSpectateActive)
             {
                 if (showNameFor <= 0.0f)
                 {
@@ -126,7 +129,7 @@ namespace TagCasterMod
                 finally
                 {
                     Console.WriteLine($"[Dual Spectate] Set p{player} view to {this.target_.carLogic_.playerData_.name_}");
-                    DualSpectateMode.ShowPlayerNamesTemporarily(player, this.target_.carLogic_.playerData_.name_);
+                    DualSpectateMode.ShowPlayerNamesTemporarily();
                 }
 
             }
