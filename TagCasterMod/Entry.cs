@@ -101,10 +101,13 @@ namespace TagCasterMod
             {
                 if (G.Sys.NetworkingManager_.IsOnline_ && G.Sys.PlayerManager_?.Current_?.playerData_?.CarCamera_?.HasComponent<SpectatorCameraLogic>() == true)
                 {
-                    var menu = FindObjectOfType<FinishMenuLogic>();
-                    if (menu != null)
+                    if (autoShowMenuAfterFinish)
                     {
-                        menu.SetState(MenuWithToggleVisibility.VisibleState.Visible);
+                        var menu = FindObjectOfType<FinishMenuLogic>();
+                        if (menu != null)
+                        {
+                            menu.SetState(MenuWithToggleVisibility.VisibleState.Visible);
+                        }
                     }
                 }
             });
