@@ -19,9 +19,10 @@ namespace TagCasterMod
         bool showTimeToWin = true;
 
         bool autoEnterSpectate = true;
-        bool autoEnterSpectateHideMenu = false;
+        bool autoEnterSpectateHideMenu = true;
 
         bool autoEnterDualSpectate = true;
+        bool autoShowMenuAfterFinish = true;
 
         public void Initialize(IManager manager)
         {
@@ -55,6 +56,7 @@ namespace TagCasterMod
                 if (autoEnterSpectate) watermark.text += "\n\nAuto Enter Spectate |";
                 if (autoEnterSpectateHideMenu) watermark.text += "\nHide Finish Menu Automatically --|";
                 if (autoEnterDualSpectate) watermark.text += "\nAuto Enter Dual Spectate --|";
+                if (autoShowMenuAfterFinish) watermark.text += "\nAuto Show Menu After Finish --|";
             });
 
             Events.Scene.BeginSceneSwitchFadeOut.Subscribe((data) =>
@@ -75,12 +77,34 @@ namespace TagCasterMod
                     if (autoEnterSpectateHideMenu)
                     {
                         var menu = FindObjectOfType<FinishMenuLogic>();
-                        if (menu != null) menu.SetState(MenuWithToggleVisibility.VisibleState.HiddenAndNamesHidden);
+                        if (menu != null)
+                        {
+                            menu.menuPanel_.TempHide(menu.mainPanel_.gameObject);
+                            menu.SetState(MenuWithToggleVisibility.VisibleState.HiddenAndNamesHidden);
+                        }
+
                     }
                     if (autoEnterDualSpectate)
                     {
                         var cam = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_;
                         DualSpectateMode.ActivateDualSpectate(this, cam, G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.GetComponent<SpectatorCameraLogic>());
+                    }
+                }
+            });
+
+            /*Events.GameMode.Go.Subscribe((data) =>
+            {
+                
+            });*/
+
+            Events.Player.Finished.SubscribeAll((instance, data) =>
+            {
+                if (G.Sys.NetworkingManager_.IsOnline_ && G.Sys.PlayerManager_?.Current_?.playerData_?.CarCamera_?.HasComponent<SpectatorCameraLogic>() == true)
+                {
+                    var menu = FindObjectOfType<FinishMenuLogic>();
+                    if (menu != null)
+                    {
+                        menu.SetState(MenuWithToggleVisibility.VisibleState.Visible);
                     }
                 }
             });
