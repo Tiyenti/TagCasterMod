@@ -21,6 +21,8 @@ namespace TagCasterMod
         bool autoEnterSpectate = true;
         bool autoEnterSpectateHideMenu = false;
 
+        bool autoEnterDualSpectate = true;
+
         public void Initialize(IManager manager)
         {
             DontDestroyOnLoad(this);
@@ -52,6 +54,7 @@ namespace TagCasterMod
                 if (showDataInWatermark) watermark.text += "\nShow Time To Win --|";
                 if (autoEnterSpectate) watermark.text += "\n\nAuto Enter Spectate |";
                 if (autoEnterSpectateHideMenu) watermark.text += "\nHide Finish Menu Automatically --|";
+                if (autoEnterDualSpectate) watermark.text += "\nAuto Enter Dual Spectate --|";
             });
 
             Events.Scene.BeginSceneSwitchFadeOut.Subscribe((data) =>
@@ -73,6 +76,11 @@ namespace TagCasterMod
                     {
                         var menu = FindObjectOfType<FinishMenuLogic>();
                         if (menu != null) menu.SetState(MenuWithToggleVisibility.VisibleState.HiddenAndNamesHidden);
+                    }
+                    if (autoEnterDualSpectate)
+                    {
+                        var cam = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_;
+                        DualSpectateMode.ActivateDualSpectate(this, cam, G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.GetComponent<SpectatorCameraLogic>());
                     }
                 }
             });
