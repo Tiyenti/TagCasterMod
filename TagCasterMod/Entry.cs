@@ -89,8 +89,7 @@ namespace TagCasterMod
                     }
                     if (autoEnterDualSpectate)
                     {
-                        var cam = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_;
-                        DualSpectateMode.ActivateDualSpectate(this, cam, G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.GetComponent<SpectatorCameraLogic>());
+                        activateDualSpectateSoon = true;
                     }
                 }
             });
@@ -160,9 +159,26 @@ namespace TagCasterMod
             });
         }
 
+        bool activateDualSpectateSoon = false;
+        float activateDualSpecateDelay = 3f;
+        float activateDualSpectateTime = 0f;
+
         void Update()
         {
             DualSpectateMode.UpdateDualSpectate();
+
+            if (activateDualSpectateSoon)
+            {
+                activateDualSpectateTime += Time.deltaTime;
+                if (activateDualSpectateTime > activateDualSpecateDelay)
+                {
+                    var cam = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_;
+                    DualSpectateMode.ActivateDualSpectate(this, cam, G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.GetComponent<SpectatorCameraLogic>());
+
+                    activateDualSpectateSoon = false;
+                    activateDualSpectateTime = 0f;
+                }
+            }
 
             if (G.Sys.PlayerManager_?.Current_?.playerData_?.Finished_ == true &&
                 G.Sys.GameManager_?.Mode_?.IsStarted_ == true &&
