@@ -24,6 +24,8 @@ namespace TagCasterMod
         bool autoEnterDualSpectate = true;
         bool autoShowMenuAfterFinish = true;
 
+        bool fixPauseUnhide = true;
+
         public void Initialize(IManager manager)
         {
             DontDestroyOnLoad(this);
@@ -57,6 +59,7 @@ namespace TagCasterMod
                 if (autoEnterSpectateHideMenu) watermark.text += "\nHide Finish Menu Automatically --|";
                 if (autoEnterDualSpectate) watermark.text += "\nAuto Enter Dual Spectate --|";
                 if (autoShowMenuAfterFinish) watermark.text += "\nAuto Show Menu After Finish --|";
+                if (fixPauseUnhide) watermark.text += "\nFix Pause Unhinde --|";
             });
 
             Events.Scene.BeginSceneSwitchFadeOut.Subscribe((data) =>
@@ -96,6 +99,42 @@ namespace TagCasterMod
             {
                 
             });*/
+
+            Events.Game.PauseToggled.Subscribe((data) =>
+            {
+                if (G.Sys.NetworkingManager_.IsOnline_ && G.Sys.PlayerManager_?.Current_?.playerData_?.CarCamera_?.HasComponent<SpectatorCameraLogic>() == true)
+                {
+                    if (fixPauseUnhide && data.paused_ == false)
+                    {
+                        var menu = FindObjectOfType<FinishMenuLogic>();
+                        if (menu != null)
+                        {
+                            if (menu.visibleState_ != MenuWithToggleVisibility.VisibleState.Visible)
+                            {
+                                menu.menuPanel_.TempHide(menu.mainPanel_.gameObject);
+                            }
+                        }
+                    }
+                }
+            });
+
+            Events.ChatWindow.ChatVisibilityChanged.Subscribe((data) =>
+            {
+                if (G.Sys.NetworkingManager_.IsOnline_ && G.Sys.PlayerManager_?.Current_?.playerData_?.CarCamera_?.HasComponent<SpectatorCameraLogic>() == true)
+                {
+                    if (fixPauseUnhide && data.isShowing_ == false)
+                    {
+                        var menu = FindObjectOfType<FinishMenuLogic>();
+                        if (menu != null)
+                        {
+                            if (menu.visibleState_ != MenuWithToggleVisibility.VisibleState.Visible)
+                            {
+                                menu.menuPanel_.TempHide(menu.mainPanel_.gameObject);
+                            }
+                        }
+                    }
+                }
+            });
 
             Events.Player.Finished.SubscribeAll((instance, data) =>
             {
