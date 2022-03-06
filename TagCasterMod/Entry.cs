@@ -160,7 +160,7 @@ namespace TagCasterMod
         }
 
         bool activateDualSpectateSoon = false;
-        float activateDualSpecateDelay = 3f;
+        float activateDualSpecateDelay = 3.0f;
         float activateDualSpectateTime = 0f;
 
         void Update()

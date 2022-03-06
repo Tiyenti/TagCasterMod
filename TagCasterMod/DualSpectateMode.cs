@@ -15,6 +15,10 @@ namespace TagCasterMod
         static SpectatorLogicHack p2spectatorCam;
         static SpectatorLogicHack p1spectatorCam;
 
+        static bool justActivated = false;
+        static float autosetp2delay = 1f;
+        static float autosetp2time = 0f;
+
         public static void ActivateDualSpectate(Entry e, CarCamera initialCarCam, SpectatorCameraLogic spc)
         {
             if (dualSpectateActive)
@@ -48,10 +52,11 @@ namespace TagCasterMod
             p1spectatorCam = p1spcstuff;
             p2spectatorCam = specLogicHack;
 
-
             initialCarCam.camera_.rect = new Rect(0, 0, 0.5f, 1);
             pdf.CarCamera_.camera_.rect = new Rect(0.5f, 0, 0.5f, 1);
 
+            justActivated = true;
+            autosetp2time = 0f;
         }
 
         public static void Reset()
@@ -59,6 +64,9 @@ namespace TagCasterMod
             p2spectatorCam = null;
             p1spectatorCam = null;
             dualSpectateActive = false;
+
+            justActivated = false;
+            autosetp2time = 0f;
         }
 
         static float showNameFor = 0.0f;
@@ -72,6 +80,19 @@ namespace TagCasterMod
         {
             if (p2spectatorCam && dualSpectateActive)
             {
+                if (justActivated)
+                {
+                    autosetp2time += Time.deltaTime;
+                    if (autosetp2time > autosetp2delay)
+                    {
+                        p2spectatorCam.FindNextTarget();
+                        if (p2spectatorCam.target_?.carLogic_.playerData_.name_ != null)
+                            Console.WriteLine($"[Dual Spectate] Autoset p2 view to {p2spectatorCam.target_.carLogic_.playerData_.name_}");
+                        autosetp2time = 0f;
+                        justActivated = false;
+                    }
+                }
+
                 if (showNameFor <= 0.0f)
                 {
                     showNameFor = 0.0f;
