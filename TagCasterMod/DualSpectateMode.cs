@@ -19,7 +19,7 @@ namespace TagCasterMod
         static float autosetp2delay = 1f;
         static float autosetp2time = 0f;
 
-        public static void ActivateDualSpectate(Entry e, CarCamera initialCarCam, SpectatorCameraLogic spc)
+        public static void ActivateDualSpectate(Entry e, CarCamera initialCarCam, SpectatorCameraLogic spc, bool autoactivated = false)
         {
             if (dualSpectateActive)
             {
@@ -55,7 +55,7 @@ namespace TagCasterMod
             initialCarCam.camera_.rect = new Rect(0, 0, 0.5f, 1);
             pdf.CarCamera_.camera_.rect = new Rect(0.5f, 0, 0.5f, 1);
 
-            justActivated = true;
+            justActivated = autoactivated;
             autosetp2time = 0f;
         }
 

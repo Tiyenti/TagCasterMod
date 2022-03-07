@@ -173,7 +173,7 @@ namespace TagCasterMod
                 if (activateDualSpectateTime > activateDualSpecateDelay)
                 {
                     var cam = G.Sys.PlayerManager_.Current_.playerData_.CarCamera_;
-                    DualSpectateMode.ActivateDualSpectate(this, cam, G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.GetComponent<SpectatorCameraLogic>());
+                    DualSpectateMode.ActivateDualSpectate(this, cam, G.Sys.PlayerManager_.Current_.playerData_.CarCamera_.GetComponent<SpectatorCameraLogic>(), true);
 
                     activateDualSpectateSoon = false;
                     activateDualSpectateTime = 0f;
